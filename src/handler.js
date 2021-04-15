@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const {nanoid} = require('nanoid');
 const books = require('./books');
 
@@ -33,7 +34,6 @@ const addBookHandler = (request, h) => {
     updatedAt,
   };
 
-  // eslint-disable-next-line max-len
   const nameIsBlank = newBook.name === '' || newBook.name === ' ' || newBook.name === undefined;
   const readPageGreater = newBook.readPage > newBook.pageCount;
 
@@ -47,7 +47,6 @@ const addBookHandler = (request, h) => {
   } else if (readPageGreater) {
     const response = h.response({
       status: 'fail',
-      // eslint-disable-next-line max-len
       message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
     });
     response.code(400);
@@ -77,16 +76,98 @@ const addBookHandler = (request, h) => {
   return response;
 };
 
-const getAllBooksHandler = () => ({
-  status: 'success',
-  data: {
-    books: books.map((book) => ({
-      id: book.id,
-      name: book.name,
-      publisher: book.publisher,
-    })),
-  },
-});
+const getAllBooksHandler = (request, h) => {
+  const {name, reading, finished} = request.query;
+  // Jika ada data
+  if (books.length > 0) {
+    // Jika ada query name
+    if (name !== undefined) {
+      const filterBooksByName = books.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()));
+      // Jika query name ada di dalam data
+      if (filterBooksByName.length > 0) {
+        const response = h.response({
+          status: 'success',
+          data: {
+            books: filterBooksByName.map((book) => ({
+              id: book.id,
+              name: book.name,
+              publisher: book.publisher,
+            })),
+          },
+        });
+        response.code(200);
+        return response;
+      // Jika query name tidak ada di dalam data
+      } else {
+        const response = h.response({
+          status: 'success',
+          data: {
+            books: [],
+          },
+        });
+        response.code(200);
+        return response;
+      }
+    // Jika ada query reading
+    } else if (reading !== undefined) {
+      const filterBooksByRead = books.filter((book) => book.reading === Boolean(Number(reading)));
+      // Jika query reading ada di dalam data
+      if (filterBooksByRead.length > 0) {
+        const response = h.response({
+          status: 'success',
+          data: {
+            books: filterBooksByRead.map((book) => ({
+              id: book.id,
+              name: book.name,
+              publisher: book.publisher,
+            })),
+          },
+        });
+        response.code(200);
+        return response;
+      }
+    // Jika ada query finished
+    } else if (finished !== undefined) {
+      const filterBooksByFinished = books.filter((book) => book.finished === Boolean(Number(finished)));
+      if (filterBooksByFinished.length > 0) {
+        const response = h.response({
+          status: 'success',
+          data: {
+            books: filterBooksByFinished.map((book) => ({
+              id: book.id,
+              name: book.name,
+              publisher: book.publisher,
+            })),
+          },
+        });
+        response.code(200);
+        return response;
+      }
+    }
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: books.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        })),
+      },
+    });
+    response.code(200);
+    return response;
+  }
+
+  // Jika tidak ada data
+  const response = h.response({
+    status: 'success',
+    data: {
+      books: [],
+    },
+  });
+  response.code(200);
+  return response;
+};
 
 const getDetailBookHandler = (request, h) => {
   const {id} = request.params;
@@ -137,7 +218,6 @@ const editBookByIdHandler = (request, h) => {
   } else if (readPageGreater) {
     const response = h.response({
       status: 'fail',
-      // eslint-disable-next-line max-len
       message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
     });
     response.code(400);
