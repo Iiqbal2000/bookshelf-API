@@ -82,7 +82,8 @@ const getAllBooksHandler = (request, h) => {
   if (books.length > 0) {
     // Jika ada query name
     if (name !== undefined) {
-      const filterBooksByName = books.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()));
+      const queryName = name.toLowerCase();
+      const filterBooksByName = books.filter((book) => book.name.toLowerCase().includes(queryName));
       // Jika query name ada di dalam data
       if (filterBooksByName.length > 0) {
         const response = h.response({
@@ -110,7 +111,8 @@ const getAllBooksHandler = (request, h) => {
       }
     // Jika ada query reading
     } else if (reading !== undefined) {
-      const filterBooksByRead = books.filter((book) => book.reading === Boolean(Number(reading)));
+      const queryReading = Boolean(Number(reading));
+      const filterBooksByRead = books.filter((book) => book.reading === queryReading);
       // Jika query reading ada di dalam data
       if (filterBooksByRead.length > 0) {
         const response = h.response({
@@ -128,7 +130,8 @@ const getAllBooksHandler = (request, h) => {
       }
     // Jika ada query finished
     } else if (finished !== undefined) {
-      const filterBooksByFinished = books.filter((book) => book.finished === Boolean(Number(finished)));
+      const queryFinished = Boolean(Number(finished));
+      const filterBooksByFinished = books.filter((book) => book.finished === queryFinished);
       if (filterBooksByFinished.length > 0) {
         const response = h.response({
           status: 'success',
@@ -244,7 +247,6 @@ const editBookByIdHandler = (request, h) => {
     reading,
     updatedAt,
   };
-
   const response = h.response({
     status: 'success',
     message: 'Buku berhasil diperbarui',
