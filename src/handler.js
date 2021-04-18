@@ -228,7 +228,6 @@ const editBookByIdHandler = (request, h) => {
   } else if (index === -1) {
     const response = h.response({
       status: 'fail',
-      // eslint-disable-next-line max-len
       message: 'Gagal memperbarui buku. Id tidak ditemukan',
     });
     response.code(404);
