@@ -138,9 +138,9 @@ Proyek ini merupakan submission dari Dicoding pada kelas " Belajar Membuat Aplik
   ```
 * Status code: `404`
 * Contoh body response:
-```javascript
-{
-    "status": "fail",
-    "message": "Buku gagal dihapus. Id tidak ditemukan"
-}
-```
+  ```javascript
+  {
+      "status": "fail",
+      "message": "Buku gagal dihapus. Id tidak ditemukan"
+  }
+  ```
